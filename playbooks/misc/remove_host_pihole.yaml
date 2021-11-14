@@ -1,0 +1,29 @@
+---
+- name: Delete local DNS record from Piholes
+  hosts: pihole
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  vars_prompt:
+    - name: "hosts_prompt"
+      prompt: "Enter host to remove"
+      private: no
+
+  tasks:
+    - name: Stop pihole-FTL
+      service:
+        name: pihole-FTL
+        state: stopped
+
+    - name: Remove host record from /etc/pihole/custom.list
+      lineinfile:
+        backup: yes
+        path: /etc/pihole/custom.list
+        regexp: "{{ hosts_prompt }}"
+        state: absent
+
+    - name: Start pihole-FTL
+      service:
+        name: pihole-FTL
+        state: started

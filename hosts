@@ -43,20 +43,21 @@
 ## db-[99:101]-node.example.com
 
 [pihole]
-pihole.local.lan ansible_user=eingram
-pihole2.local.lan ansible_user=eingram
+pihole.local.lan 
+pihole2.local.lan 
 
 [debian]
-librenms.local.lan ansible_user=eingram
-admin1.local.lan ansible_user=eingram
-upsmon.local.lan ansible_user=eingram
-mint20-1.local.lan ansible_user=eingram
-pihole.local.lan ansible_user=eingram
-pihole2.local.lan ansible_user=eingram
+librenms.local.lan 
+admin1.local.lan 
+upsmon.local.lan 
+mint20-1.local.lan 
+pihole.local.lan 
+pihole2.local.lan 
 
 [centos]
-splunk.local.lan ansible_user=eingram
-ansible1.local.lan ansible_user=eingram
+splunk.local.lan 
+ansible1.local.lan 
+deploy1.local.lan
 
 [windows_servers]
 hl-dc1.homelab.local

@@ -1,0 +1,34 @@
+---
+- name: Add local DNS record to Piholes
+  hosts: pihole
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  vars_prompt:
+    - name: "hosts_prompt"
+      prompt: "Enter host to add"
+      private: no
+
+    - name: "ip_prompt"
+      prompt: "Enter IP"
+      private: no
+
+
+  tasks:
+    - name: Stop pihole-FTL
+      service:
+        name: pihole-FTL
+        state: stopped
+
+    - name: Add host record to /etc/pihole/custom.list
+      lineinfile:
+        backup: yes
+        path: /etc/pihole/custom.list
+        line: "{{ ip_prompt }} {{ hosts_prompt }}.local.lan"
+        state: present
+
+    - name: Start pihole-FTL
+      service:
+        name: pihole-FTL
+        state: started
