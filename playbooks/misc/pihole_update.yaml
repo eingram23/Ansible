@@ -1,0 +1,12 @@
+---
+- name: Update piholes to latest version
+  hosts: pihole
+  gather_facts: no
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+  - name: Run pihole up 
+    command: pihole -up

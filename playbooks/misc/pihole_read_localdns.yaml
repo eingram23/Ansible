@@ -1,0 +1,15 @@
+---
+- name: Read custom.list from Piholes
+  hosts: pihole
+  remote_user: eingram
+  become: false
+  gather_facts: no
+
+  tasks:
+    - name: Read /etc/pihole/custom.list file
+      shell: cat /etc/pihole/custom.list
+      register: dns_list
+
+    - name: Output results
+      debug:
+        msg: "{{ dns_list.stdout }}"

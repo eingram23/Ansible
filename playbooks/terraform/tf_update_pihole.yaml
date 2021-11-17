@@ -1,0 +1,44 @@
+---
+- name: Fetch latest custom.list
+  hosts: pihole.local.lan
+  gather_facts: no
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  tasks:
+    - name: Fetch custom.list from primary pihole
+      fetch:
+        src: /etc/pihole/custom.list
+        dest: ~/code/Ansible/files/
+        flat: yes
+
+- name: Copy custom.list to secondary pihole
+  hosts: pihole2.local.lan
+  gather_facts: no
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  tasks:
+    - name: Copy custom.list
+      copy:
+        src: ~/code/Ansible/files/custom.list
+        dest: /etc/pihole/custom.list
+        owner: root
+        group: root
+        mode: '0644'
+
+- name: Restart both piholes
+  hosts: pihole
+  gather_facts: no
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+    - name: Restart pihole-FTL
+      service:
+        name: pihole-FTL
+        state: restarted

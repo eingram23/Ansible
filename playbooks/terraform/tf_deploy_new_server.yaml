@@ -1,0 +1,37 @@
+---
+
+# DO NOT RUN MANUALLY - MEANT TO BE RUN FROM TERRAFORM
+
+- name: Add new host to Ansible inventory and copy ssh keys
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  become: false
+
+  tasks:
+
+    - name: Create inventory entry
+      ini_file:
+        dest: ~/code/Ansible/hosts
+        section: centos
+        option: "{{ newhost }}"
+        allow_no_value: yes
+
+    - name: Refresh metadata
+      meta: refresh_inventory
+    
+- name: Add host record to primary pihole custom.list
+  hosts: pihole.local.lan
+  gather_facts: no
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+    - name: Add record
+      lineinfile:
+        backup: yes
+        path: /etc/pihole/custom.list
+        line: "{{ newip }} {{ newhost }}"
+        state: present

@@ -57,7 +57,9 @@ pihole2.local.lan
 [centos]
 splunk.local.lan 
 ansible1.local.lan 
-deploy1.local.lan
+Docker1.local.lan
+Docker2.local.lan
+Docker3.local.lan
 
 [windows_servers]
 hl-dc1.homelab.local
