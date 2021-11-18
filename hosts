@@ -61,6 +61,11 @@ Docker1.local.lan
 Docker2.local.lan
 Docker3.local.lan
 
+[docker]
+Docker1.local.lan
+Docker2.local.lan
+Docker3.local.lan
+
 [windows_servers]
 hl-dc1.homelab.local
 hl-srv1.homelab.local

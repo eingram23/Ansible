@@ -13,7 +13,7 @@
     - name: Create inventory entry
       ini_file:
         dest: ~/code/Ansible/hosts
-        section: centos
+        section: "{{ group }}"
         option: "{{ newhost }}"
         allow_no_value: yes
 

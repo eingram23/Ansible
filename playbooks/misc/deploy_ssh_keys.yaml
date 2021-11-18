@@ -1,7 +1,7 @@
 # Run with ansible-playbook -kK
 
 ---
-- name: Deploy Ansible keys to new host 
+- name: Run this to allow passwordless ssh and passwordless sudo 
   hosts: "{{ hosts_prompt }}"
   gather_facts: no
   remote_user: eingram
@@ -10,10 +10,10 @@
 
   vars_prompt:
     - name: "hosts_prompt"
-      prompt: "Enter host/group to add new ssh keys to: "
+      prompt: "Enter host/group to add new ssh keys to"
       private: no
     - name: "pub_key"
-      prompt: "Enter ssh pub key: "
+      prompt: "Enter ssh pub key"
       private: no
   
   tasks:
@@ -21,14 +21,34 @@
     - name: Create user .ssh dir
       file:
         path: "/home/eingram/.ssh"
+        owner: eingram
+        group: eingram
+        mode: 0755
         state: directory
 
     - name: Create authorized_keys if not already existing
       file:
         path: "/home/eingram/.ssh/authorized_keys"
+        owner: eingram
+        group: eingram
+        mode: 0600
         state: touch
 
     - name: Add public key
       lineinfile:
         path: "/home/eingram/.ssh/authorized_keys"
         line: "{{ pub_key }}"
+
+    - name: Create sudoers.d entry
+      file:
+        path: "/etc/sudoers.d/eingram"
+        owner: root
+        group: root
+        mode: 0644
+        state: touch
+
+    - name: Add sudo entry
+      lineinfile:
+        path: "/etc/sudoers.d/eingram"
+        line: "eingram ALL=(ALL:ALL) NOPASSWD: ALL"
+        
