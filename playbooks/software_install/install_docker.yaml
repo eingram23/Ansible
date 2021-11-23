@@ -8,6 +8,17 @@
 
   tasks:
 
+    - name: Create Docker group
+      group:
+        name: docker
+        state: present
+
+    - name: Add current user to Docker group
+      user: 
+        name: eingram
+        groups: docker
+        append: yes
+
     - name: Install pre-requisite packages
       yum:
         name: "{{ item }}"
@@ -32,3 +43,6 @@
         name: docker 
         state: started 
         enabled: yes
+
+    
+      
