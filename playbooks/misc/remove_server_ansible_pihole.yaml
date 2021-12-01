@@ -1,13 +1,14 @@
 ---
-
-# DO NOT RUN MANUALLY - MEANT TO BE RUN FROM TERRAFORM 
-# WHEN DESTROY THIS IS RUN
-
 - name: Remove host from Ansible inventory
   hosts: localhost
   gather_facts: no
   connection: local
   become: false
+
+  vars_prompt:
+    - name: "host"
+      prompt: "Enter host to remove"
+      private: no
 
   tasks:
 
@@ -15,7 +16,7 @@
       lineinfile:
         backup: yes
         path: ~/code/Ansible/hosts
-        line: "{{ newhost }}"
+        line: "{{ host }}"
         state: absent
 
     - name: Refresh metadata
@@ -34,7 +35,7 @@
       lineinfile:
         backup: yes
         path: /etc/pihole/custom.list
-        line: "{{ newip }} {{ newhost }}"
+        line: "{{ ansible_facts['ansible_default_ipv4.address'] }} {{ host }}"
         state: absent
 
     - name: Restart pihole-FTL

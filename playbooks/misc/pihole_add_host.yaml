@@ -1,5 +1,5 @@
 ---
-- name: Delete local DNS record from Piholes
+- name: Add local DNS record to Piholes
   hosts: pihole
   remote_user: eingram
   become: yes
@@ -7,8 +7,13 @@
 
   vars_prompt:
     - name: "hosts_prompt"
-      prompt: "Enter host to remove"
+      prompt: "Enter host to add"
       private: no
+
+    - name: "ip_prompt"
+      prompt: "Enter IP"
+      private: no
+
 
   tasks:
     - name: Stop pihole-FTL
@@ -16,12 +21,12 @@
         name: pihole-FTL
         state: stopped
 
-    - name: Remove host record from /etc/pihole/custom.list
+    - name: Add host record to /etc/pihole/custom.list
       lineinfile:
         backup: yes
         path: /etc/pihole/custom.list
-        regexp: "{{ hosts_prompt }}"
-        state: absent
+        line: "{{ ip_prompt }} {{ hosts_prompt }}"
+        state: present
 
     - name: Start pihole-FTL
       service:

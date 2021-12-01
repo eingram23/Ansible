@@ -21,7 +21,7 @@
       meta: refresh_inventory
     
 - name: Add host record to primary pihole custom.list
-  hosts: pihole.local.lan
+  hosts: pihole
   gather_facts: no
   remote_user: eingram
   become: yes
