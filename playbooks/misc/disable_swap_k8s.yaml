@@ -1,0 +1,14 @@
+---
+- name: Disable swap - k8s requirement
+  hosts: k8s
+  gather_facts: no
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  tasks:
+    - name: Disable swap
+      shell: |
+        sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+        swapoff -a 
+      

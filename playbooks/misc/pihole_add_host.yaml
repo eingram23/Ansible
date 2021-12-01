@@ -16,11 +16,6 @@
 
 
   tasks:
-    - name: Stop pihole-FTL
-      service:
-        name: pihole-FTL
-        state: stopped
-
     - name: Add host record to /etc/pihole/custom.list
       lineinfile:
         backup: yes
@@ -28,7 +23,7 @@
         line: "{{ ip_prompt }} {{ hosts_prompt }}"
         state: present
 
-    - name: Start pihole-FTL
+    - name: Restart pihole-FTL
       service:
         name: pihole-FTL
-        state: started
+        state: restarted

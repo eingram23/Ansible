@@ -20,7 +20,7 @@
     - name: Refresh metadata
       meta: refresh_inventory
     
-- name: Add host record to primary pihole custom.list
+- name: Add host record to pihole custom.list
   hosts: pihole
   gather_facts: no
   remote_user: eingram
@@ -35,3 +35,8 @@
         path: /etc/pihole/custom.list
         line: "{{ newip }} {{ newhost }}"
         state: present
+
+    - name: Restart pihole-FTL
+      service:
+        name: pihole-FTL
+        state: restarted
