@@ -1,0 +1,16 @@
+---
+- name: Open port 6443
+  hosts: k8s
+  gather_facts: no
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  tasks:
+    - name: FirewallD rules
+      firewalld:
+        permanent: yes
+        immediate: yes
+        port: 6443/tcp
+        state: enabled
+        zone: public

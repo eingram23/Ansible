@@ -1,17 +1,23 @@
 ---
+- name: Get host
+  hosts: localhost pihole
+  gather_facts: no
+  vars_prompt:
+    - name: "host_prompt"
+      prompt: "Enter host to remove"
+      private: no
+
+  tasks:
+    - set_fact:
+        host: "{{ host_prompt }}"
+
 - name: Remove host from Ansible inventory
   hosts: localhost
   gather_facts: no
   connection: local
   become: false
 
-  vars_prompt:
-    - name: "host"
-      prompt: "Enter host to remove"
-      private: no
-
   tasks:
-
     - name: Remove inventory entry
       lineinfile:
         backup: yes
@@ -19,8 +25,7 @@
         line: "{{ host }}"
         state: absent
 
-    - name: Refresh metadata
-      meta: refresh_inventory
+    - meta: refresh_inventory
     
 - name: Remove host record to piholes
   hosts: pihole
@@ -35,7 +40,7 @@
       lineinfile:
         backup: yes
         path: /etc/pihole/custom.list
-        line: "{{ ansible_facts['ansible_default_ipv4.address'] }} {{ host }}"
+        regexp: "{{ host }}$"
         state: absent
 
     - name: Restart pihole-FTL

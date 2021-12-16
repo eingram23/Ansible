@@ -1,6 +1,6 @@
 ---
 - name: Install docker on a Centos 7 machine
-  hosts: docker
+  hosts: docker1.local.lan
   gather_facts: no
   remote_user: eingram
   become: yes

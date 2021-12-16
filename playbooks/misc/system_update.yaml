@@ -1,0 +1,35 @@
+---
+- name: Update software/kernel packages - CentOS
+  hosts: all
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+    - when: ansible_facts['distribution'] == 'CentOS'
+      block:
+        - name: Update repo info and update installed packages - CentOS
+          yum:
+            name: '*'
+            state: latest
+            update_cache: yes
+
+        - name: Remove unneeded packages
+          yum:
+            autoremove: yes
+
+    - when: ansible_facts['distribution'] != 'CentOS'
+      block:
+        - name: Update repo info and update installed packages - Non CentOS
+          apt:
+            name: '*'
+            state: latest
+            update_cache: yes
+            force_apt_get: yes
+
+        - name: Remove unneeded packages
+          apt:
+            autoremove: yes
+
+    

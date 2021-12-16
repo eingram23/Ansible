@@ -1,13 +1,13 @@
 ---
-- hosts: "{{ hosts_prompt }}"
+- hosts: all
   remote_user: eingram
   become: yes
   become_method: sudo
 
-  vars_prompt:
-    - name: "hosts_prompt"
-      prompt: "hostname or host group need to run with Playbook"
-      private: no
+  # vars_prompt:
+  #   - name: "hosts_prompt"
+  #     prompt: "hostname or host group need to run with Playbook"
+  #     private: no
 
   tasks:
     - when: ansible_facts['distribution'] != 'CentOS'
