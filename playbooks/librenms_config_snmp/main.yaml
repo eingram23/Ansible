@@ -1,0 +1,13 @@
+---
+- name: Configure snmpd for LibreNMS
+  hosts: docker1.local.lan
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+  vars:
+    snmpd_dir: '/etc/snmp/'
+    distro_file: '/usr/bin/distro'
+    librenms_agent_url: 'https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro'
+  roles:
+    - common
+...
