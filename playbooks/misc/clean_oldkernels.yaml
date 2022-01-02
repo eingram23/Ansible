@@ -1,0 +1,22 @@
+---
+- name: Clean old kernels from CentOS
+  hosts: all
+  gather_facts: yes
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  tasks:
+    - block:
+      - name: Make sure yum-utils is installed
+        yum:
+          name: 'yum-utils'
+          state: latest
+      - name: Remove unused kernels (CentOS)
+        shell: package-cleanup --oldkernels -y
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - block:
+      - name: Remove unused kernels (RHEL)
+        shell: dnf remove --oldinstallonly -y
+      when: ansible_facts['distribution'] == 'RedHat'

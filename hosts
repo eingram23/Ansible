@@ -4,7 +4,6 @@ pihole2.local.lan
 
 [debian]
 librenms.local.lan 
-admin1.local.lan 
 upsmon.local.lan 
 mint20-1.local.lan 
 pihole.local.lan 
@@ -12,15 +11,12 @@ pihole2.local.lan
 
 [centos]
 splunk.local.lan 
-ansible1.local.lan 
 docker1.local.lan
-
-[windows_servers]
-hl-dc1.homelab.local
-hl-srv1.homelab.local
-hl-sql1.homelab.local
 
 [k8s]
 k8-node1.local.lan
 k8-node3.local.lan
 k8-node2.local.lan
+
+[docker]
+dockhost1.local.lan

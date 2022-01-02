@@ -1,6 +1,6 @@
 ---
 - name: Configure snmpd for LibreNMS
-  hosts: docker1.local.lan
+  hosts: dockhost1.local.lan
   remote_user: eingram
   become: yes
   become_method: sudo

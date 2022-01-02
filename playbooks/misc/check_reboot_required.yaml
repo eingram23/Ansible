@@ -10,7 +10,7 @@
   #     private: no
 
   tasks:
-    - when: ansible_facts['distribution'] != 'CentOS'
+    - when: ansible_facts['distribution'] != 'CentOS' and ansible_facts['distribution'] != 'RedHat'
       block:
         - name: Check if reboot required (Debian)
           stat:
@@ -34,6 +34,18 @@
             name: yum-utils
 
         - name: Check if reboot required (CentOS)
+          shell: needs-restarting -r
+          failed_when: false
+          register: reboot_required
+          changed_when: false
+
+    - when: ansible_facts['distribution'] == 'RedHat'
+      block:
+        - name: Install dnf-utils (if needed)
+          package:
+            name: dnf-utils
+
+        - name: Check if reboot required (RHEL)
           shell: needs-restarting -r
           failed_when: false
           register: reboot_required

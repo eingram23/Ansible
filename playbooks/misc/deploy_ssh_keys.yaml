@@ -2,7 +2,7 @@
 
 ---
 - name: Run this to allow passwordless ssh and passwordless sudo 
-  hosts: "{{ hosts_prompt }}"
+  hosts: all
   gather_facts: no
   remote_user: eingram
   become: yes
@@ -10,7 +10,7 @@
 
   vars_prompt:
     - name: "hosts_prompt"
-      prompt: "Enter host/group to add new ssh keys to"
+      prompt: "MAKE SURE TO RUN THIS WITH -kK - Enter host/group to add new ssh keys to"
       private: no
     - name: "pub_key"
       prompt: "Enter ssh pub key"

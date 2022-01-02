@@ -11,7 +11,7 @@
   when: librenms_agent_present.stat.exists != true
 
 - name: Install snmpd if needed
-  yum:
+  dnf:
     name: net-snmp
     state: present
     

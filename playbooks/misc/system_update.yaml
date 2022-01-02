@@ -1,5 +1,5 @@
 ---
-- name: Update software/kernel packages - CentOS
+- name: Update software/kernel packages
   hosts: all
   remote_user: eingram
   become: yes
@@ -19,9 +19,9 @@
           yum:
             autoremove: yes
 
-    - when: ansible_facts['distribution'] != 'CentOS'
+    - when: ansible_facts['distribution'] != 'CentOS' and ansible_facts['distribution'] != 'RedHat'
       block:
-        - name: Update repo info and update installed packages - Non CentOS
+        - name: Update repo info and update installed packages - Non CentOS/RHEL
           apt:
             name: '*'
             state: latest
@@ -32,4 +32,15 @@
           apt:
             autoremove: yes
 
+    - when: ansible_facts['distribution'] == 'RedHat' 
+      block:
+        - name: Update repo info and update installed packages - RHEL
+          dnf:
+            name: '*'
+            state: latest
+            update_cache: yes
+
+        - name: Remove unneeded packages
+          dnf:
+            autoremove: yes
     
