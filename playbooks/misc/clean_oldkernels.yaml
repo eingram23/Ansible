@@ -1,5 +1,5 @@
 ---
-- name: Clean old kernels from CentOS
+- name: Clean old kernels
   hosts: all
   gather_facts: yes
   remote_user: eingram
@@ -20,3 +20,8 @@
       - name: Remove unused kernels (RHEL)
         shell: dnf remove --oldinstallonly -y
       when: ansible_facts['distribution'] == 'RedHat'
+
+    - block:
+      - name: Remove unused kernels (Non CentOS/RHEL)
+        shell: apt-get purge --autoremove -y
+      when: ansible_facts['distribution'] != 'CentOS' and ansible_facts['distribution'] != 'RedHat'

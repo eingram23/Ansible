@@ -15,3 +15,5 @@ splunk.local.lan
 [rhel]
 podhost1.local.lan
 [kubernetes]
+kubenode3.local.lan
+kubenode2.local.lan
