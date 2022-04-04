@@ -1,6 +1,6 @@
 ---
 - name: Update software/kernel packages
-  hosts: all
+  hosts: upsmon.local.lan
   remote_user: eingram
   become: yes
   become_method: sudo
