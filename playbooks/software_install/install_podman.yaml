@@ -8,11 +8,11 @@
 
   tasks:
 
-    - name: Enable and install container tools
-      shell: |
-        sudo yum module enable -y container-tools:rhel8
-        sudo yum module install -y container-tools:rhel8
-
+    - name: Install Podman
+      package:
+        name: "podman"
+        state: present
+        
     - name: Allow lingering (for rootless podman)
       remote_user: eingram
       become: no
