@@ -1,0 +1,89 @@
+---
+- name: Install Podman
+  become: true
+  become_method: sudo
+  package:
+    name: "podman"
+    state: present
+    
+- name: Allow lingering (for rootless podman)
+  shell: "loginctl enable-linger"
+
+- name: Create supporting folder structure
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: eingram
+    group: eingram
+    mode: 0775
+  loop:
+    - /home/eingram/code
+    - /home/eingram/.config/systemd/user
+
+- name: Clone test.diversionforum.net repo from github
+  git:
+    repo: git@github.com:KungFuJoe23/{{app}}.git
+    dest: "{{root}}{{app}}"
+    clone: yes
+    update: yes
+
+- name: Clone Containers repo from github
+  git:    
+    repo: git@github.com:KungFuJoe23/Containers.git
+    dest: "{{root}}Containers"
+    clone: yes
+    update: yes
+
+- name: Build test.diversionforum.net-web image
+  containers.podman.podman_image:
+    name: "{{app}}-web"
+    path: "{{root}}Containers/Projects/{{app}}/{{app}}-web"
+    force: yes
+
+- name: Build test.diversionforum.net-php image
+  containers.podman.podman_image:
+    name: "{{app}}-php"
+    path: "{{root}}Containers/Projects/{{app}}/{{app}}-php"
+    force: yes
+
+- name: Create test.diversionforum.net pod
+  containers.podman.podman_pod:
+    name: "{{app}}"
+    state: started
+    publish: 8080:8080
+
+- name: Run test.diversionforum.net-web container
+  containers.podman.podman_container:
+    name: "{{app}}-web"
+    image: localhost/{{app}}-web
+    volume: 
+      - "{{root}}{{app}}/html:/var/www/html:z"
+    state: started
+    restart_policy: always
+    pod: "{{app}}"
+
+- name: Run test.diversionforum.net-php container
+  containers.podman.podman_container:
+    name: "{{app}}-php"
+    image: localhost/{{app}}-php
+    volume: 
+      - "{{root}}{{app}}/html:/var/www/html"
+    state: started
+    restart_policy: always
+    pod: "{{app}}"
+
+- name: Run test.diversionforum.net-db container
+  containers.podman.podman_container:
+    name: "{{app}}-db"
+    image: docker.io/library/mariadb:latest
+    env:
+      MYSQL_ROOT_PASSWORD: "{{mysql_root}}"
+    volume: 
+      - /var/lib/mysql
+    state: started
+    restart_policy: always
+    pod: "{{app}}"
+
+
+    
+    

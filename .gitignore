@@ -6,3 +6,6 @@
 *.tgz
 *.deb
 *.rpm
+
+# Ignore .sql backups
+*.sql

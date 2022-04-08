@@ -29,7 +29,7 @@
 
 - name: Copy installer over to system - CentOS
   copy:
-    src: /home/eingram/ansible/playbooks/splunk_uf_install/roles/common/files/{{splunk_uf_file_rpm}}
+    src: "{{splunk_uf_file_rpm}}"
     dest: "{{splunk_working_directory}}"
     owner: eingram
     group: eingram
@@ -41,7 +41,7 @@
  
 - name: Copy installer over to system - Non CentOS
   copy:
-    src: /home/eingram/ansible/playbooks/splunk_uf_install/roles/common/files/{{splunk_uf_file_deb}}
+    src: "{{splunk_uf_file_deb}}"
     dest: "{{splunk_working_directory}}"
     owner: eingram
     group: eingram
@@ -53,7 +53,7 @@
 
 - name: Copy user-seed.conf to Forwarder Location
   copy:
-    src: /home/eingram/ansible/playbooks/splunk_uf_install/roles/common/files/user-seed.conf
+    src: user-seed.conf
     dest: /opt/splunkforwarder/etc/system/local/
     owner: eingram
     group: eingram

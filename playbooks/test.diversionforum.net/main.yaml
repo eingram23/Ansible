@@ -1,0 +1,15 @@
+---
+- name: Deploy test.diversionforum.net
+  hosts: podhost2.local.lan
+  gather_facts: no
+  remote_user: eingram
+  become: no
+  vars:
+    app: 'test.diversionforum.net'
+    root: '/home/eingram/code/'
+    mysql_root: "{{ lookup('hashi_vault','secret=secret/data/ansible/mysql:mysql_root token=s.h0nStZ3oX6IqCbMMI9hZrOw8') }}"
+
+  roles:
+    - common
+...
+  
