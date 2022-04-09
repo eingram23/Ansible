@@ -7,7 +7,8 @@
   vars:
     app: 'test.diversionforum.net'
     root: '/home/eingram/code/'
-    mysql_root: "{{ lookup('hashi_vault','secret=secret/data/ansible/mysql:mysql_root token=s.h0nStZ3oX6IqCbMMI9hZrOw8') }}"
+    mysql_root: "{{ lookup('hashi_vault','secret=secret/data/ansible/mysql:mysql_root') }}"
+    mysql_df: "{{ lookup('hashi_vault','secret=secret/data/ansible/mysql:mysql_df') }}"
 
   roles:
     - common

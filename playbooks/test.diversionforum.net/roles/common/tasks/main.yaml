@@ -26,6 +26,27 @@
     dest: "{{root}}{{app}}"
     clone: yes
     update: yes
+    force: yes
+
+- name: Add db password to Settings.php
+  ansible.builtin.lineinfile:
+    path: "{{root}}{{app}}/html/Settings.php"
+    search_string: 'changethis'
+    line: $db_passwd = '{{mysql_df}}';
+
+- name: Modify html perms to make necessary folders writable
+  ansible.builtin.file:
+    path: "{{item}}"
+    state: directory
+    recurse: yes
+    mode: '0777'
+  loop:
+    - "{{root}}{{app}}/html/attachments"
+    - "{{root}}{{app}}/html/avatars"
+    - "{{root}}{{app}}/html/cache"
+    - "{{root}}{{app}}/html/Packages"
+    - "{{root}}{{app}}/html/Smileys"
+    - "{{root}}{{app}}/html/Themes"
 
 - name: Clone Containers repo from github
   git:    
@@ -44,6 +65,17 @@
   containers.podman.podman_image:
     name: "{{app}}-php"
     path: "{{root}}Containers/Projects/{{app}}/{{app}}-php"
+    force: yes
+
+- name: Copy sql backup to build Location
+  ansible.builtin.copy:
+    src: smfprod.sql
+    dest: "{{root}}Containers/Projects/{{app}}/{{app}}-db"
+
+- name: Build test.diversionforum.net-db image
+  containers.podman.podman_image:
+    name: "{{app}}-db"
+    path: "{{root}}Containers/Projects/{{app}}/{{app}}-db"
     force: yes
 
 - name: Create test.diversionforum.net pod
@@ -75,9 +107,12 @@
 - name: Run test.diversionforum.net-db container
   containers.podman.podman_container:
     name: "{{app}}-db"
-    image: docker.io/library/mariadb:latest
+    image: localhost/{{app}}-db
     env:
       MYSQL_ROOT_PASSWORD: "{{mysql_root}}"
+      MYSQL_DATABASE: smfprod
+      MYSQL_USER: smfprod
+      MYSQL_PASSWORD: "{{mysql_df}}"
     volume: 
       - /var/lib/mysql
     state: started

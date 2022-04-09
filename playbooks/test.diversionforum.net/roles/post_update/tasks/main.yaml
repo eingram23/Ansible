@@ -1,0 +1,21 @@
+---
+- name: Set perms on website after updates
+  ansible.builtin.file:
+    path: "{{root}}{{app}}/html"
+    state: directory
+    recurse: yes
+    mode: '0755'
+
+- name: Modify html perms to make necessary folders writable
+  ansible.builtin.file:
+    path: "{{item}}"
+    state: directory
+    recurse: yes
+    mode: '0777'
+  loop:
+    - "{{root}}{{app}}/html/attachments"
+    - "{{root}}{{app}}/html/avatars"
+    - "{{root}}{{app}}/html/cache"
+    - "{{root}}{{app}}/html/Packages"
+    - "{{root}}{{app}}/html/Smileys"
+    - "{{root}}{{app}}/html/Themes"
