@@ -7,6 +7,7 @@
   vars:
     app: 'test.diversionforum.net'
     root: '/home/eingram/code/'
+    repo: 'git@github.com:eingram23/'
     mysql_root: "{{ lookup('hashi_vault','secret=secret/data/ansible/mysql:mysql_root') }}"
     mysql_df: "{{ lookup('hashi_vault','secret=secret/data/ansible/mysql:mysql_df') }}"
 

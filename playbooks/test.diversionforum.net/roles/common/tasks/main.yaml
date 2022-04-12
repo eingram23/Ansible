@@ -22,7 +22,7 @@
 
 - name: Clone test.diversionforum.net repo from github
   git:
-    repo: git@github.com:KungFuJoe23/{{app}}.git
+    repo: "{{repo}}{{app}}.git"
     dest: "{{root}}{{app}}"
     clone: yes
     update: yes
@@ -50,7 +50,7 @@
 
 - name: Clone Containers repo from github
   git:    
-    repo: git@github.com:KungFuJoe23/Containers.git
+    repo: "{{repo}}Containers.git"
     dest: "{{root}}Containers"
     clone: yes
     update: yes
