@@ -20,3 +20,5 @@ podhost2.local.lan
 kubenode3.local.lan
 kubenode1.local.lan
 kubenode2.local.lan
+[Demo]
+DemoVM.local.lan

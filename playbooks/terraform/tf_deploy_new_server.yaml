@@ -2,7 +2,7 @@
 
 # DO NOT RUN MANUALLY - MEANT TO BE RUN FROM TERRAFORM
 
-- name: Add new host to Ansible inventory and copy ssh keys
+- name: Add new host to Ansible inventory and Pihole DNS
   hosts: localhost
   gather_facts: no
   connection: local
