@@ -1,0 +1,27 @@
+---
+- name: Test playbook to create podman volume 
+  hosts: podhost3.local.lan
+  become: false
+  gather_facts: false
+  remote_user: eingram
+
+  tasks:
+
+  - name: Install Podman
+    become: true
+    become_method: sudo
+    package:
+      name: "podman"
+      state: present
+
+  - name: Allow lingering (for rootless podman)
+    shell: "loginctl enable-linger"
+    
+  - name: test deploy podman container with volume
+    containers.podman.podman_container:
+      name: test
+      image: alpine:latest
+      state: started
+      restart_policy: always
+      volume:
+        - busybox-vol:/test

@@ -1,0 +1,13 @@
+---
+- name: Deploy unifi-controller container
+  hosts: podhost1.local.lan
+  gather_facts: no
+  remote_user: eingram
+  become: no
+  vars:
+    app: 'unifi'
+
+  roles:
+    - common
+...
+  

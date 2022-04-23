@@ -15,10 +15,10 @@ splunk.local.lan
 [rhel]
 podhost1.local.lan
 podhost2.local.lan
-podhost3.local.lan
 
 [kubenodes]
 kubenode3.local.lan
 kubenode1.local.lan
 kubenode2.local.lan
 [Demo]
+DemoVM.local.lan

@@ -3,6 +3,7 @@
   remote_user: eingram
   become: yes
   become_method: sudo
+  ignore_errors: true
 
   # vars_prompt:
   #   - name: "hosts_prompt"
@@ -22,10 +23,10 @@
             msg: "Reboot required"
           when: reboot_required_data.stat.exists
 
-        - name: Report if reboot not required
-          debug:
-            msg: "Reboot not required"
-          when: not reboot_required_data.stat.exists
+        # - name: Report if reboot not required
+        #   debug:
+        #     msg: "Reboot not required"
+        #   when: not reboot_required_data.stat.exists
  
     - when: ansible_facts['distribution'] == 'CentOS'
       block:
@@ -35,9 +36,11 @@
 
         - name: Check if reboot required (CentOS)
           shell: needs-restarting -r
-          failed_when: false
           register: reboot_required
-          changed_when: false
+    
+        - name: Report if reboot required (CentOS)
+          debug:  
+            var: reboot_required.rc
 
     - when: ansible_facts['distribution'] == 'RedHat'
       block:
@@ -47,6 +50,8 @@
 
         - name: Check if reboot required (RHEL)
           shell: needs-restarting -r
-          failed_when: false
           register: reboot_required
-          changed_when: false
+
+        - name: Report if reboot required (RHEL)
+          debug:  
+            var: reboot_required.rc
