@@ -1,0 +1,43 @@
+---
+- name: Update software/kernel packages
+  hosts: all
+  remote_user: eingram
+  become: yes
+  become_method: sudo
+
+  vars_prompt:
+    - name: check_only
+      prompt: "Run reboot check only? (y/n)"
+      private: no
+      default: "n"
+    - name: reboot
+      prompt: "Reboot servers that require it (and clean old kernels)? (y/n)"
+      private: no
+      default: "n"
+
+  tasks:
+
+    - name: Update Ubuntu/Debian hosts
+      include_role:
+        name: ubdeb 
+      when: ansible_facts['distribution'] != 'CentOS' and 
+            ansible_facts['distribution'] != 'RedHat' and
+            check_only == "n"
+
+    - name: Update CentOS hosts
+      include_role:
+        name: centos
+      when: ansible_facts['distribution'] == 'CentOS' and
+            check_only == "n"
+
+    - name: Update RHEL hosts
+      include_role:
+        name: redhat
+      when: ansible_facts['distribution'] == 'RedHat' and
+            check_only == "n"
+
+    - name: Check if reboot required
+      include_role:
+        name: checkreboot
+      when: check_only == "y"
+      

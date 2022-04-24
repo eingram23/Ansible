@@ -1,14 +1,4 @@
 ---
-- name: Install Podman
-  become: true
-  become_method: sudo
-  package:
-    name: "podman"
-    state: present
-    
-- name: Allow lingering (for rootless podman)
-  shell: "loginctl enable-linger"
-
 - name: Create unifi pod
   containers.podman.podman_pod:
     name: "{{app}}"
@@ -24,7 +14,7 @@
       - 6789:6789 #optional
       - 5514:5514/udp #optional
     
-- name: Run unifi container
+- name: Create and run unifi container
   containers.podman.podman_container:
     name: "{{app}}-controller"
     image: linuxserver/unifi-controller:latest

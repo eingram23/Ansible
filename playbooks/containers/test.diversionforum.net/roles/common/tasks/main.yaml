@@ -112,7 +112,7 @@
       MYSQL_ROOT_PASSWORD: "{{mysql_root}}"
       MYSQL_DATABASE: smfprod
       MYSQL_USER: smfprod
-      MYSQL_PASSWORD: "{{mysql_df}}"
+      MYSQL_PASSWORD: "{{mysql_smfprod}}"
     volume: 
       - /var/lib/mysql
     state: started

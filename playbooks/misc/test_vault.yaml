@@ -1,8 +1,0 @@
----
-- hosts: localhost
-  gather_facts: no
-
-  tasks:
-
-    - debug:
-        msg: "{{ lookup('hashi_vault','secret=secret/data/ansible/mysql:mysql_root token=s.h0nStZ3oX6IqCbMMI9hZrOw8') }}"
