@@ -1,7 +1,7 @@
 ---
 - name: Set perms on website after updates
   ansible.builtin.file:
-    path: "{{root}}{{app}}/html"
+    path: "{{root}}{{app}}/public_html"
     state: directory
     recurse: yes
     mode: '0755'
@@ -13,9 +13,9 @@
     recurse: yes
     mode: '0777'
   loop:
-    - "{{root}}{{app}}/html/attachments"
-    - "{{root}}{{app}}/html/avatars"
-    - "{{root}}{{app}}/html/cache"
-    - "{{root}}{{app}}/html/Packages"
-    - "{{root}}{{app}}/html/Smileys"
-    - "{{root}}{{app}}/html/Themes"
+    - "{{root}}{{app}}/public_html/attachments"
+    - "{{root}}{{app}}/public_html/avatars"
+    - "{{root}}{{app}}/public_html/cache"
+    - "{{root}}{{app}}/public_html/Packages"
+    - "{{root}}{{app}}/public_html/Smileys"
+    - "{{root}}{{app}}/public_html/Themes"

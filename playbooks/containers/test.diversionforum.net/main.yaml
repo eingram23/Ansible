@@ -5,7 +5,7 @@
   remote_user: eingram
   become: no
   vars:
-    app: 'test.diversionforum.net'
+    app: 'www.diversionforum.net'
     root: '/home/eingram/code/'
     repo: 'git@github.com:eingram23/'
     mysql_root: "{{ lookup('hashi_vault','secret=secret/data/dftest/mysql:root') }}"

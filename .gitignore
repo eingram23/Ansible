@@ -11,3 +11,5 @@
 
 # Ignore .sql backups
 *.sql
+
+*.key

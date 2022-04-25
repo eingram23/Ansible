@@ -7,28 +7,39 @@
     group: eingram
     mode: 0775
   loop:
-    - /home/eingram/code
+    - "{{root}}"
     - /home/eingram/.config/systemd/user
 
 - name: Copy github private key to remote host
   ansible.builtin.copy:
-    src: ssh-key-ansible
+    src: ssh-key-ansible.key
     dest: /home/eingram/.ssh/
     mode: '0600'
 
-- name: Clone test.diversionforum.net repo from github
-  git:
-    repo: "{{repo}}{{app}}.git"
-    dest: "{{root}}{{app}}"
-    clone: yes
-    key_file: /home/eingram/.ssh/ssh-key-ansible
-    accept_hostkey: yes
-    update: yes
-    force: yes
+- name: Pause playbook until web files are uploaded to host
+  pause:
+    prompt: "Make sure web file backup is in /home/eingram and renamed to sitebackup.tar.gz"
+    
+# - name: Clone test.diversionforum.net repo from github
+#   git:
+#     repo: "{{repo}}{{app}}.git"
+#     dest: "{{root}}{{app}}"
+#     clone: yes
+#     key_file: /home/eingram/.ssh/ssh-key-ansible
+#     accept_hostkey: yes
+#     update: yes
+#     force: yes
+
+- name: Extract web files to html root
+  ansible.builtin.unarchive:
+    src: /home/eingram/sitebackup.tar.gz
+    dest: "{{root}}"
+    remote_src: yes
+    extra_opts: [--strip-components=2]
 
 - name: Add db password to Settings.php
   ansible.builtin.lineinfile:
-    path: "{{root}}{{app}}/html/Settings.php"
+    path: "{{root}}{{app}}/public_html/Settings.php"
     search_string: 'changethis'
     line: $db_passwd = '{{mysql_smfprod}}';
 
@@ -39,18 +50,18 @@
     recurse: yes
     mode: '0777'
   loop:
-    - "{{root}}{{app}}/html/attachments"
-    - "{{root}}{{app}}/html/avatars"
-    - "{{root}}{{app}}/html/cache"
-    - "{{root}}{{app}}/html/Packages"
-    - "{{root}}{{app}}/html/Smileys"
-    - "{{root}}{{app}}/html/Themes"
+    - "{{root}}{{app}}/public_html/attachments"
+    - "{{root}}{{app}}/public_html/avatars"
+    - "{{root}}{{app}}/public_html/cache"
+    - "{{root}}{{app}}/public_html/Packages"
+    - "{{root}}{{app}}/public_html/Smileys"
+    - "{{root}}{{app}}/public_html/Themes"
 
 - name: Clone Containers repo from github
   git:    
     repo: "{{repo}}Containers.git"
     dest: "{{root}}Containers"
-    key_file: /home/eingram/.ssh/ssh-key-ansible
+    key_file: /home/eingram/.ssh/ssh-key-ansible.key
     accept_hostkey: yes
     clone: yes
     update: yes
@@ -67,10 +78,17 @@
     path: "{{root}}Containers/Projects/{{app}}/{{app}}-php"
     force: yes
 
-- name: Copy sql backup to build Location
-  ansible.builtin.copy:
-    src: smfprod.sql
-    dest: "{{root}}Containers/Projects/{{app}}/{{app}}-db"
+- name: Pause playbook to make sure smfprod sql dump is on remote host
+  pause:
+    prompt: "Make sure smfprod backup is in /home/eingram and renamed to smfprod.bak.gz"
+
+# - name: Copy sql backup to build Location
+#   ansible.builtin.copy:
+#     src: smfprod.sql
+#     dest: "{{root}}Containers/Projects/{{app}}/{{app}}-db"
+
+- name: Extract smfprod sql backup
+  ansible.builtin.command: gunzip -c smfprod.bak.gz > {{root}}Containers/Projects/{{app}}/{{app}}-db/smfprod.sql
 
 - name: Build test.diversionforum.net-db image
   containers.podman.podman_image:
@@ -89,7 +107,7 @@
     name: "{{app}}-web"
     image: localhost/{{app}}-web
     volume: 
-      - "{{root}}{{app}}/html:/var/www/html:z"
+      - "{{root}}{{app}}/public_html:/var/www/html:z"
     state: started
     restart_policy: always
     pod: "{{app}}"
@@ -99,7 +117,7 @@
     name: "{{app}}-php"
     image: localhost/{{app}}-php
     volume: 
-      - "{{root}}{{app}}/html:/var/www/html"
+      - "{{root}}{{app}}/public_html:/var/www/html"
     state: started
     restart_policy: always
     pod: "{{app}}"
@@ -114,7 +132,7 @@
       MYSQL_USER: smfprod
       MYSQL_PASSWORD: "{{mysql_smfprod}}"
     volume: 
-      - /var/lib/mysql
+      - smfprod-data:/var/lib/mysql
     state: started
     restart_policy: always
     pod: "{{app}}"
