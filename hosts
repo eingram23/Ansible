@@ -21,4 +21,6 @@ podhost3.local.lan
 kubenode3.local.lan
 kubenode1.local.lan
 kubenode2.local.lan
-[Demo]
+
+[gcp]
+34.94.166.8 ansible_user=sa_117086173709125868794 ansible_ssh_private_key_file=~/ssh-key-ansible

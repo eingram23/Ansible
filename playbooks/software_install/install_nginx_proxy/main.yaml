@@ -1,0 +1,26 @@
+---
+- name: Setup nginx reverse proxy
+  hosts: "{{hostname}}"
+  gather_facts: false
+  remote_user: eingram
+  become: true
+  become_method: sudo
+
+  vars_prompt:
+    - name: hostname
+      prompt: "Enter hostname to run against"
+      private: no
+
+  pre_tasks:
+
+    - name: Make sure required firewall ports are open
+      firewalld:
+        port: "{{ item }}"
+        permanent: yes
+        state: enabled
+        zone: public
+      loop:
+        - 80/tcp
+
+  roles:
+    - common

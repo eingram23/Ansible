@@ -1,14 +1,4 @@
 ---
-- name: Install Podman
-  become: true
-  become_method: sudo
-  package:
-    name: "podman"
-    state: present
-    
-- name: Allow lingering (for rootless podman)
-  shell: "loginctl enable-linger"
-
 - name: Create supporting folder structure
   ansible.builtin.file:
     path: "{{ item }}"
@@ -20,11 +10,19 @@
     - /home/eingram/code
     - /home/eingram/.config/systemd/user
 
+- name: Copy github private key to remote host
+  ansible.builtin.copy:
+    src: ssh-key-ansible
+    dest: /home/eingram/.ssh/
+    mode: '0600'
+
 - name: Clone test.diversionforum.net repo from github
   git:
     repo: "{{repo}}{{app}}.git"
     dest: "{{root}}{{app}}"
     clone: yes
+    key_file: /home/eingram/.ssh/ssh-key-ansible
+    accept_hostkey: yes
     update: yes
     force: yes
 
@@ -32,7 +30,7 @@
   ansible.builtin.lineinfile:
     path: "{{root}}{{app}}/html/Settings.php"
     search_string: 'changethis'
-    line: $db_passwd = '{{mysql_df}}';
+    line: $db_passwd = '{{mysql_smfprod}}';
 
 - name: Modify html perms to make necessary folders writable
   ansible.builtin.file:
@@ -52,6 +50,8 @@
   git:    
     repo: "{{repo}}Containers.git"
     dest: "{{root}}Containers"
+    key_file: /home/eingram/.ssh/ssh-key-ansible
+    accept_hostkey: yes
     clone: yes
     update: yes
 
@@ -82,7 +82,7 @@
   containers.podman.podman_pod:
     name: "{{app}}"
     state: started
-    publish: 8080:8080
+    publish: "{{nginx_port}}:{{nginx_port}}"
 
 - name: Run test.diversionforum.net-web container
   containers.podman.podman_container:

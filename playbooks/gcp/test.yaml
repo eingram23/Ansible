@@ -1,0 +1,7 @@
+---
+- hosts: gcp
+
+  tasks:
+
+  - name: test
+    command: ls

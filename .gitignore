@@ -6,6 +6,8 @@
 *.tgz
 *.deb
 *.rpm
+*.tar
+*.gz
 
 # Ignore .sql backups
 *.sql
