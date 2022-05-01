@@ -32,3 +32,14 @@
       ansible.builtin.service:
         name: nginx
         state: restarted
+
+    - name: install selinux-related python binaries for Ansible to work
+      package: name={{ item }} state=present
+      with_items:
+        - python3-libselinux
+        - python3-libsemanage
+
+    - name: set "httpd_can_network_connect" flag on
+      seboolean: name={{ item }} state=yes persistent=yes
+      with_items:
+        - httpd_can_network_connect

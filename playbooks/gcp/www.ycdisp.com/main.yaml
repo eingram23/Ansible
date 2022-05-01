@@ -12,7 +12,7 @@
     repo: 'git@github.com:eingram23/'
     mysql_root: "{{ lookup('hashi_vault','secret=secret/data/ycprod/mysql:root') }}"
     mysql_yandcprod: "{{ lookup('hashi_vault','secret=secret/data/ycprod/mysql:yandcprod') }}"
-    nginx_port: "8080"
+    nginx_port: "8081"
     
   # pre_tasks:
 
