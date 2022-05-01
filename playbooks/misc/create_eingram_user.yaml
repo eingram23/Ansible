@@ -1,7 +1,7 @@
-- name: Create eingram user
-  hosts: RockyTest.local.lan
+- name: Create ansible user
+  hosts: podhost1.local.lan
   gather_facts: false
-  remote_user: ansible
+  remote_user: eingram
   become: true
   become_method: sudo
 
@@ -22,13 +22,13 @@
 
     - name: Add sudoers users to wheel group
       user:
-        name=eingram
+        name=ansible
         groups=wheel
         append=yes
         state=present
         createhome=yes
 
     - name: Set up authorized keys for the deployer user
-      authorized_key: user=eingram key="{{item}}"
+      authorized_key: user=ansible key="{{item}}"
       with_file:
         - ~/code/Ansible/files/eingram_id_rsa.pub
