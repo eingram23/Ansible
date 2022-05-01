@@ -13,3 +13,4 @@
 *.sql
 
 *.key
+hosts.*
