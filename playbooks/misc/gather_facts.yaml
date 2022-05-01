@@ -1,5 +1,5 @@
 ---
-- hosts: "{{ host | default('all') }}"
+- hosts: gcp
   gather_facts: yes
   remote_user: eingram
   become: false

@@ -4,4 +4,9 @@
   tasks:
 
   - name: test
-    command: ls
+    command: ls /
+    register: ls_output
+
+  - name: Test output
+    debug:  
+      var: ls_output.stdout_lines

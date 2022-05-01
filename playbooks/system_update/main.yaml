@@ -1,6 +1,6 @@
 ---
 - name: Update software/kernel packages
-  hosts: all
+  hosts: gcp
   remote_user: eingram
   become: yes
   become_method: sudo
@@ -22,6 +22,7 @@
         name: ubdeb 
       when: ansible_facts['distribution'] != 'CentOS' and 
             ansible_facts['distribution'] != 'RedHat' and
+            ansible_facts['distribution'] != 'Rocky' and
             check_only == "n"
 
     - name: Update CentOS hosts
@@ -30,10 +31,11 @@
       when: ansible_facts['distribution'] == 'CentOS' and
             check_only == "n"
 
-    - name: Update RHEL hosts
+    - name: Update Rocky/RHEL hosts
       include_role:
         name: redhat
-      when: ansible_facts['distribution'] == 'RedHat' and
+      when: (ansible_facts['distribution'] == 'RedHat' or 
+            ansible_facts['distribution'] == 'Rocky') and
             check_only == "n"
 
     - name: Check if reboot required

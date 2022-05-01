@@ -12,15 +12,42 @@ pihole2.local.lan
 [centos]
 splunk.local.lan 
 
-[rhel]
+[redhat]
 podhost1.local.lan
 podhost2.local.lan
 podhost3.local.lan
 
-[kubenodes]
-kubenode3.local.lan
-kubenode1.local.lan
-kubenode2.local.lan
-
 [gcp]
-34.94.166.8 ansible_user=sa_117086173709125868794 ansible_ssh_private_key_file=~/ssh-key-ansible
+yc-srv1 ansible_host=34.94.14.166 ansible_user=sa_117086173709125868794 ansible_ssh_private_key_file=~/ssh-key-ansible
+
+[linux:children]
+debian
+centos
+redhat
+pihole
+gcp
+
+[windows]
+hl-fsw.homelab.local
+hl-srv1.homelab.local
+hl-dc1.homelab.local
+hl-sql1.homelab.local
+hl-san1.homelab.local
+hl-clus16-1.homelab.local
+hl-clus16-2.homelab.local
+hl-clus16-r1.homelab.local
+hl-clus16-r2.homelab.local
+hl-ws1.homelab.local
+
+[windows:vars]
+ansible_user=ansible
+ansible_become_user=ansible
+ansible_password="{{ lookup('hashi_vault','secret=secret/data/ssh/ansible:ssh_password') }}"
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore
+ansible_winrm_transport=basic
+ansible_winrm_port=5985
+ansible_become_method=runas
+
+[Test]
+[linux]

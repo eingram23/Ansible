@@ -1,6 +1,6 @@
 ---
 - name: Install podman
-  hosts: docker1.local.lan
+  hosts: gcp
   gather_facts: no
   remote_user: eingram
   become: yes
@@ -13,7 +13,7 @@
         name: "podman"
         state: present
         
-    - name: Allow lingering (for rootless podman)
-      remote_user: eingram
-      become: no
-      shell: "loginctl enable-linger"
+    # - name: Allow lingering (for rootless podman)
+    #   remote_user: eingram
+    #   become: no
+    #   shell: "loginctl enable-linger"
