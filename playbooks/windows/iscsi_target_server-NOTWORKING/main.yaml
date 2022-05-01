@@ -1,0 +1,67 @@
+---
+- name: Crate iSCSI targets and disks and connect HL-CLUS16 cluster
+  hosts: hl-fsw.homelab.local
+  gather_facts: false
+
+  tasks:
+
+    - name: Run powershell script to create targets and storage
+      ansible.windows.win_powershell:
+        script: |
+
+          $iSCSI_LUN_sizes = 10
+
+          Disable-NetAdapterBinding -Name iSCSI -ComponentID ms_msclient,ms_server,ms_lltdio,ms_lldp,ms_tcpip6,ms_rspndr,ms_pacer
+
+          Write-Host "Disabling NETBIOS on all adapters"
+          
+          $int = 'HKLM:\SYSTEM\CurrentControlSet\Services\netbt\Parameters\interfaces'  
+          Get-ChildItem $int | ForEach-Object {  
+              Set-ItemProperty -Path "$int\$($_.pschildname)" -name NetBiosOptions -value 2
+          }
+          Get-NetAdapter -Name iSCSI | Set-DNSClient –RegisterThisConnectionsAddress $False
+
+          $iSCSI_initport = @()
+
+          $iSCSI_IQNs = ($iSCSI_initport -join ",")
+          Write-Host "Creating targets on $SANHost - $iSCSI_IQNs"
+          New-IscsiServerTarget -TargetName $ClusRoot -InitiatorIds $iSCSI_IQNs
+          Foreach ($iSCSI_LUN_size in $iSCSI_LUN_sizes) {
+              [Int64]$iSCSI_LUN_size_bytes = $iSCSI_LUN_size * 1Gb
+              $LUN_path = "D:\iSCSIVirtualDisks\$ClusRoot-$LUN.vhdx"
+              Write-Host "Creating LUN $LUN at $LUN_path of size $iSCSI_LUN_size "
+              New-IscsiVirtualDisk -Path $LUN_path -Size $iSCSI_LUN_size_bytes
+              Add-IscsiVirtualDiskTargetMapping -TargetName $ClusRoot -Path $LUN_path
+              $LUN ++
+          }
+
+          Foreach ($Node in $Nodes) {
+              Invoke-Command -Computername $Node -ScriptBlock {
+                  Get-IscsiTarget | Connect-IscsiTarget
+                  Update-HostStorageCache
+              }
+          }
+
+        parameters:
+          SANHost: HL-FSW
+          ClusRoot: HL-CLUS16
+          LUN: 1    
+          SANTargetPortal: 172.26.0.230
+      register: output
+
+    - name: show output
+      debug: 
+        var: output
+
+- name: Attach HL-CLUS16 nodes to iSCSI targets
+  hosts: hl-clus16-1.homelab.local;hl-clus16-2.homelab.local
+  gather_facts: false
+
+  tasks:
+
+    - name: Attach nodes
+      ansible.windows.win_powershell:
+        script: |
+          New-iSCSITargetPortal -TargetPortalAddress $SANTargetPortal
+          $iSCSI_initport += "IQN:" + (Get-InitiatorPort).NodeAddress
+          

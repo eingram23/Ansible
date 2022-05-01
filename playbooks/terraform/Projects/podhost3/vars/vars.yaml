@@ -18,10 +18,10 @@ vsphere_datastore_list:
   # - XN_iSCSI_SSD2
 vsphere_network_list: 
   - Lab-LAN1
-  # - Lab-LAN1
+  - Lab-LAN1
   # - Lab-LAN1
 vm_name_list: 
-  - podhost2
+  - podhost3
   # - test2
   # - test3
 ip_address_list:
