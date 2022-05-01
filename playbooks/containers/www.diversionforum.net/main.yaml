@@ -2,7 +2,7 @@
 - name: Deploy test.diversionforum.net
   hosts: yc-srv1
   gather_facts: no
-  remote_user: eingram
+  remote_user: poduser
   become: no
 
   vars:
@@ -33,5 +33,5 @@
 
   roles:
     - common
-...
+
   
