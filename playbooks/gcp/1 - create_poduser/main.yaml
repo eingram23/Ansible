@@ -1,0 +1,12 @@
+---
+- name: Create poduser
+  hosts: yc-srv1
+  become: true
+  become_method: sudo
+
+  tasks:
+
+    - name: Create poduser
+      ansible.builtin.user:
+        name: poduser
+        password: $6$lXKOFT4EnBuM2rL/$U27Ikvfuxrs22L8HsYcyDgQE63EWBV0psUOhRiezxKJjkMHa5yRgVET4HiVbCjc.93VKCRbd52Vt4Nn8WyEjJ.
