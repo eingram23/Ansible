@@ -51,3 +51,4 @@ ansible_become_method=runas
 
 [Test]
 [linux]
+podhost3.local.lan
