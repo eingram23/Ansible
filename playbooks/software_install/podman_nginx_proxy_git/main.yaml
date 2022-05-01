@@ -1,0 +1,34 @@
+---
+- name: Install podman and nginx reverse proxy
+  hosts: yc-srv1
+  gather_facts: no
+  become: true
+  become_method: sudo
+
+  tasks: 
+
+    - name: Make sure git is installed
+      package:
+        name: "git"
+        state: present
+
+    - name: Make sure podman is installed
+      package:
+        name: "podman"
+        state: present
+
+    - name: Install nginx
+      ansible.builtin.package:
+        name: "nginx"
+        state: present
+
+    - name: Copy proxy.conf to /etc/nginx/conf.d
+      ansible.builtin.copy:
+        src: proxy.conf
+        dest: /etc/nginx/conf.d
+        mode: '0644'
+
+    - name: Restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
