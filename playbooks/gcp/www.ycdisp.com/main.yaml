@@ -14,11 +14,11 @@
     mysql_yandcprod: "{{ lookup('hashi_vault','secret=secret/data/ycprod/mysql:yandcprod') }}"
     nginx_port: "8080"
     
-  pre_tasks:
+  # pre_tasks:
 
-      - name: Remind to enable linger for poduser
-        pause:
-          prompt: "sudo loginctl enable-linger as poduser [hit enter to continue]"
+  #     - name: Remind to enable linger for poduser
+  #       pause:
+  #         prompt: "sudo loginctl enable-linger as poduser [hit enter to continue]"
 
   roles:
     - common
