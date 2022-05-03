@@ -1,6 +1,6 @@
 ---
 - name: Deploy www.ycdisp.com
-  hosts: "{{ varhost }}"
+  hosts: "{{ hostvar }}"
   gather_facts: no
   # remote_user: eingram
   become_user: poduser
@@ -8,17 +8,13 @@
 
   vars:
     app: "www.ycdisp.com"
+    container: "www.ycdisp.com"
     root: '/home/poduser/code/'
     repo: 'git@github.com:eingram23/'
+    smtp_pw: "{{ lookup('hashi_vault','secret=secret/data/google/smtp:password') }}"
     mysql_root: "{{ lookup('hashi_vault','secret=secret/data/ycprod/mysql:root') }}"
     mysql_yandcprod: "{{ lookup('hashi_vault','secret=secret/data/ycprod/mysql:yandcprod') }}"
     nginx_port: "8081"
-    
-  # pre_tasks:
-
-  #     - name: Remind to enable linger for poduser
-  #       pause:
-  #         prompt: "sudo loginctl enable-linger as poduser [hit enter to continue]"
 
   roles:
     - common
