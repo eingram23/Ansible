@@ -1,6 +1,6 @@
 ---
 - name: Deploy www.ycdisp.com
-  hosts: yc-srv1
+  hosts: "{{ varhost }}"
   gather_facts: no
   # remote_user: eingram
   become_user: poduser
@@ -11,13 +11,14 @@
     root: '/home/poduser/code/'
     repo: 'git@github.com:eingram23/'
     mysql_root: "{{ lookup('hashi_vault','secret=secret/data/ycprod/mysql:root') }}"
-    mysql_smfprod: "{{ lookup('hashi_vault','secret=secret/data/ycprod/mysql:yandcprod') }}"
-    nginx_port: "8080"
+    mysql_yandcprod: "{{ lookup('hashi_vault','secret=secret/data/ycprod/mysql:yandcprod') }}"
+    nginx_port: "8081"
     
-    pre_tasks:
+  # pre_tasks:
 
-      - name: Allow lingering (for rootless podman)
-        shell: "loginctl enable-linger"
+  #     - name: Remind to enable linger for poduser
+  #       pause:
+  #         prompt: "sudo loginctl enable-linger as poduser [hit enter to continue]"
 
   roles:
     - common

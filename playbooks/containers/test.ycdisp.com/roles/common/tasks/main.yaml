@@ -59,11 +59,13 @@
     clone: yes
     update: yes
 
-- name: Build www.ycdisp.com-web image
+- name: Build test.ycdisp.com-web image
   containers.podman.podman_image:
     name: "{{app}}-web"
-    path: "{{root}}Containers/Projects/{{app}}/{{app}}-web"
+    path: "{{root}}Containers/Projects/{{container}}/{{container}}-web"
     force: yes
+    build:
+      extra_args: --build-arg PASSWORD={{ smtp_pw }}
 
 # - name: Pause playbook to make sure smfprod sql dump is on remote host
 #   pause:
@@ -72,24 +74,24 @@
 - name: Copy sql backup to build Location
   ansible.builtin.copy:
     src: yandcprod.sql
-    dest: "{{root}}Containers/Projects/{{app}}/{{app}}-db"
+    dest: "{{root}}Containers/Projects/{{container}}/{{container}}-db"
 
 # - name: Extract smfprod sql backup
-#   ansible.builtin.shell: gunzip -c /home/poduser/smfprod.bak.gz > {{root}}Containers/Projects/{{app}}/{{app}}-db/smfprod.sql
+#   ansible.builtin.shell: gunzip -c /home/poduser/smfprod.bak.gz > {{root}}Containers/Projects/{{container}}/{{container}}-db/smfprod.sql
 
-- name: Build www.ycdisp.com-db image
+- name: Build test.ycdisp.com-db image
   containers.podman.podman_image:
     name: "{{app}}-db"
-    path: "{{root}}Containers/Projects/{{app}}/{{app}}-db"
+    path: "{{root}}Containers/Projects/{{container}}/{{container}}-db"
     force: yes
 
-- name: Create www.ycdisp.com pod
+- name: Create test.ycdisp.com pod
   containers.podman.podman_pod:
     name: "{{app}}"
     state: started
-    publish: "127.0.0.1:{{nginx_port}}:{{nginx_port}}"
+    publish: "{{nginx_port}}:80"
 
-- name: Run www.ycdisp.com-web container
+- name: Run test.ycdisp.com-web container
   containers.podman.podman_container:
     name: "{{app}}-web"
     image: localhost/{{app}}-web
@@ -99,7 +101,7 @@
     restart_policy: always
     pod: "{{app}}"
 
-- name: Run www.ycdisp.com-db container
+- name: Run test.ycdisp.com-db container
   containers.podman.podman_container:
     name: "{{app}}-db"
     image: localhost/{{app}}-db
@@ -113,6 +115,21 @@
     state: started
     restart_policy: always
     pod: "{{app}}"
+
+- name: Configure connection string
+  ansible.builtin.lineinfile:
+    path: "{{root}}{{app}}/public_html/includes/globals.ini.php"
+    search_string: "{{ item.search }}"
+    line: "{{ item.replace }}"
+  loop:
+    - { search: '$database_dbc = "dbname";', replace: '$database_dbc = "yandcprod";' }
+    - { search: '$username_dbc = "username";', replace: '$username_dbc = "yandcprod";' }
+    - { search: '$password_dbc = "password";', replace: '$password_dbc = "{{mysql_yandcprod}}";' }
+
+    
+    
+
+
 
 
     

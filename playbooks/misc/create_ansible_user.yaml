@@ -1,5 +1,5 @@
 - name: Create ansible user
-  hosts: podhost1.local.lan
+  hosts: linux
   gather_facts: false
   remote_user: eingram
   become: true
@@ -7,6 +7,11 @@
 
   tasks:
 
+    - name: Create ansible user
+      ansible.builtin.user:
+        name: ansible
+        password: $6$CRvGabIziUpx7Z5H$8dF37lNx/1d/e4XOvWjzQFkmJjBoLMNOI6M7ADKfCssptb/EI.k1IrTWz3gVj/El.1RfqLcGkrd3w0kZ7T/KM0
+    
     - name: Make sure we have a 'wheel' group
       group:
         name: wheel

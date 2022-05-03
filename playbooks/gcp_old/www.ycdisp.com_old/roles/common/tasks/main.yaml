@@ -87,7 +87,7 @@
   containers.podman.podman_pod:
     name: "{{app}}"
     state: started
-    publish: "{{nginx_port}}:{{nginx_port}}"
+    publish: "127.0.0.1:{{nginx_port}}:{{nginx_port}}"
 
 - name: Run www.ycdisp.com-web container
   containers.podman.podman_container:

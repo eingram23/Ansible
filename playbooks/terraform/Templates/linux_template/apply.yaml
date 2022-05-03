@@ -32,7 +32,7 @@
 
 - name: Create eingram user
   hosts: temp_group
-  gather_facts: false
+  gather_facts: true
   remote_user: ansible
   become: true
   become_method: sudo

@@ -15,17 +15,23 @@ splunk.local.lan
 [redhat]
 podhost1.local.lan
 podhost2.local.lan
-podhost3.local.lan
 
 [gcp]
-yc-srv1 ansible_host=34.94.14.166 ansible_user=sa_117086173709125868794 ansible_ssh_private_key_file=~/ssh-key-ansible
+yc-srv1 
+
+[gcp:vars]
+ansible_host=34.94.14.166 
+ansible_user=sa_117086173709125868794 
+ansible_ssh_private_key_file=~/ssh-key-ansible
 
 [linux:children]
 debian
 centos
 redhat
 pihole
-gcp
+
+[linux:vars]
+ansible_user=ansible
 
 [windows]
 hl-fsw.homelab.local
