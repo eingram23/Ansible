@@ -1,8 +1,7 @@
 ---
 - name: Deploy test.ycdisp.com
-  hosts: "{{ hostvar }}"
+  hosts: "{{ hostvar|default([]) }}"
   gather_facts: no
-  # remote_user: eingram
   become_user: poduser
   become_method: sudo
 
