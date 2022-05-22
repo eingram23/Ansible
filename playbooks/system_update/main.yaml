@@ -1,6 +1,6 @@
 ---
 - name: Update software/kernel packages
-  hosts: gcp
+  hosts: "{{ hostvar|default([]) }}" 
   remote_user: eingram
   become: yes
   become_method: sudo

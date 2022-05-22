@@ -2,8 +2,8 @@
 - name: Deploy unifi-controller container
   hosts: podhost1.local.lan
   gather_facts: no
-  remote_user: ansible
-  become: no
+  become_user: poduser
+  become_method: sudo
   
   vars:
     app: 'unifi'
@@ -20,24 +20,15 @@
       default: "n"
       private: no
     - name: backup_filename
-      prompt: "Enter name of backup file to restore (unifi_backup_mo-dd.tar) (Enter to skip)"
+      prompt: "Enter name of backup file to restore (unifi_backup_mo-dd.tar.gz) (Enter to skip)"
       private: no
       default: ""
 
   pre_tasks:
 
-    - name: Make sure Podman is installed
-      become: true
-      become_method: sudo
-      package:
-        name: "podman"
-        state: present
-        
-    - name: Allow lingering (for rootless podman)
-      shell: "loginctl enable-linger"
-
     - name: Make sure required firewall ports are open
       become: true
+      become_user: root
       become_method: sudo
       firewalld:
         port: "{{ item }}"
@@ -57,6 +48,7 @@
 
     - name: Reload firewall
       become: true
+      become_user: root
       become_method: sudo
       systemd:
         name: firewalld

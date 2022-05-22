@@ -3,39 +3,42 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: eingram
-    group: eingram
+    owner: poduser
+    group: poduser
     mode: 0775
   loop:
     - "{{root}}"
-    - /home/eingram/.config/systemd/user
+    - /home/poduser/.config/systemd/user
 
 - name: Copy github private key to remote host
   ansible.builtin.copy:
     src: ssh-key-ansible.key
-    dest: /home/eingram/.ssh/
+    dest: /home/poduser/.ssh/
     mode: '0600'
 
 - name: Pause playbook until web files are uploaded to host
   pause:
-    prompt: "Make sure web file backup is in /home/eingram and renamed to sitebackup.tar.gz"
+    prompt: "Make sure web file backup is in /home/poduser and renamed to sitebackup.tar.gz"
     
-# - name: Clone www.diversionforum.net repo from github
+# - name: Clone test.diversionforum.net repo from github
 #   git:
 #     repo: "{{repo}}{{app}}.git"
 #     dest: "{{root}}{{app}}"
 #     clone: yes
-#     key_file: /home/eingram/.ssh/ssh-key-ansible
+#     key_file: /home/poduser/.ssh/ssh-key-ansible
 #     accept_hostkey: yes
 #     update: yes
 #     force: yes
 
 - name: Extract web files to html root
   ansible.builtin.unarchive:
-    src: /home/eingram/sitebackup.tar.gz
+    src: /home/poduser/sitebackup.tar.gz
     dest: "{{root}}"
     remote_src: yes
     extra_opts: [--strip-components=2]
+
+- name: Rename www.diversionforum.net to test.diversionforum.net
+  ansible.builtin.command: mv "{{root}}/www.diversionforum.net" "{{root}}/test.diversionforum.net"
 
 - name: Edit Settings.php to replace localhost with 127.0.0.1 for db connection
   ansible.builtin.lineinfile:
@@ -67,18 +70,18 @@
   git:    
     repo: "{{repo}}Containers.git"
     dest: "{{root}}Containers"
-    key_file: /home/eingram/.ssh/ssh-key-ansible.key
+    key_file: /home/poduser/.ssh/ssh-key-ansible.key
     accept_hostkey: yes
     clone: yes
     update: yes
 
-- name: Build www.diversionforum.net-web image
+- name: Build test.diversionforum.net-web image
   containers.podman.podman_image:
     name: "{{app}}-web"
     path: "{{root}}Containers/Projects/{{app}}/{{app}}-web"
     force: yes
 
-- name: Build www.diversionforum.net-php image
+- name: Build test.diversionforum.net-php image
   containers.podman.podman_image:
     name: "{{app}}-php"
     path: "{{root}}Containers/Projects/{{app}}/{{app}}-php"
@@ -86,7 +89,7 @@
 
 - name: Pause playbook to make sure smfprod sql dump is on remote host
   pause:
-    prompt: "Make sure smfprod backup is in /home/eingram and renamed to smfprod.bak.gz"
+    prompt: "Make sure smfprod backup is in /home/poduser and renamed to smfprod.bak.gz"
 
 # - name: Copy sql backup to build Location
 #   ansible.builtin.copy:
@@ -94,21 +97,21 @@
 #     dest: "{{root}}Containers/Projects/{{app}}/{{app}}-db"
 
 - name: Extract smfprod sql backup
-  ansible.builtin.shell: gunzip -c /home/eingram/smfprod.bak.gz > {{root}}Containers/Projects/{{app}}/{{app}}-db/smfprod.sql
+  ansible.builtin.shell: gunzip -c /home/poduser/smfprod.bak.gz > {{root}}Containers/Projects/{{app}}/{{app}}-db/smfprod.sql
 
-- name: Build www.diversionforum.net-db image
+- name: Build test.diversionforum.net-db image
   containers.podman.podman_image:
     name: "{{app}}-db"
     path: "{{root}}Containers/Projects/{{app}}/{{app}}-db"
     force: yes
 
-- name: Create www.diversionforum.net pod
+- name: Create test.diversionforum.net pod
   containers.podman.podman_pod:
     name: "{{app}}"
     state: started
     publish: "{{nginx_port}}:{{nginx_port}}"
 
-- name: Run www.diversionforum.net-web container
+- name: Run test.diversionforum.net-web container
   containers.podman.podman_container:
     name: "{{app}}-web"
     image: localhost/{{app}}-web
@@ -118,7 +121,7 @@
     restart_policy: always
     pod: "{{app}}"
 
-- name: Run www.diversionforum.net-php container
+- name: Run test.diversionforum.net-php container
   containers.podman.podman_container:
     name: "{{app}}-php"
     image: localhost/{{app}}-php
@@ -128,7 +131,7 @@
     restart_policy: always
     pod: "{{app}}"
 
-- name: Run www.diversionforum.net-db container
+- name: Run test.diversionforum.net-db container
   containers.podman.podman_container:
     name: "{{app}}-db"
     image: localhost/{{app}}-db

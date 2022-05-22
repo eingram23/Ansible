@@ -3,8 +3,11 @@
   include_role:
     name: mount_nas
 
-- name: Copy backup to localhost
-  ansible.builtin.command: cp /mnt/Shared/Backup/Containers/unifi-controller/{{backup_filename}} /home/eingram/
+- name: Prompt to copy backup to localhost
+  ansible.posix.synchronize:
+    src: /mnt/Shared/Backup/Containers/unifi-controller/{{backup_filename}}
+    dest: /home/poduser/{{backup_filename}}  
+  delegate_to: "{{ inventory_hostname }}"
 
 - name: Stop unifi-controller container
   containers.podman.podman_container:
@@ -12,7 +15,7 @@
     state: stopped
 
 - name: Restore unifi-controller data
-  ansible.builtin.command: podman run --volumes-from unifi-controller --privileged --rm -v /home/eingram:/backup busybox sh -c "cd /config && tar xvf /backup/{{backup_filename}} --strip 1"
+  ansible.builtin.command: podman run --volumes-from unifi-controller --privileged --rm -v /home/poduser:/backup busybox sh -c "cd /config && tar xzvf /backup/{{backup_filename}} --strip 1"
 
 - name: Start unifi-controller container
   containers.podman.podman_container:

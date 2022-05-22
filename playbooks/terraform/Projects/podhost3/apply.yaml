@@ -30,7 +30,7 @@
     - terraform_apply
     - add_hosts_inv
 
-- name: Create eingram user
+- name: Setup pre-reqs
   hosts: temp_group
   gather_facts: true
   remote_user: ansible
@@ -38,4 +38,5 @@
   become_method: sudo
   
   roles:
-    - add_eingram_user
+    - add_admin_user
+    - install_software
