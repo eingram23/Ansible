@@ -1,0 +1,40 @@
+---
+- name: Setup NTP
+  hosts: "{{ hostvar|default([]) }}"
+  become: true
+  become_method: sudo
+
+  tasks:
+
+    - name: make sure chronyd is installed
+      ansible.builtin.package:
+        name: chrony
+        state: latest
+        update_cache: yes
+
+    - name: Make sure Chrony is started up
+      ansible.builtin.service: 
+        name: chronyd 
+        state: started
+        enabled: yes
+
+    - name: deploy chrony.conf template
+      ansible.builtin.copy:
+        src: "{{playbook_dir}}/files/chrony.conf"
+        dest: /etc/chrony.conf
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+
+    - name: Set timezone to America/Los_Angeles
+      community.general.timezone:
+        name: America/Los_Angeles
+
+    - name: Restart chronyd
+      ansible.builtin.service:
+        name: chronyd
+        state: restarted
+
+    - name: Sync hwclock
+      ansible.builtin.shell: hwclock -w

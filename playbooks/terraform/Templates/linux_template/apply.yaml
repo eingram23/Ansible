@@ -39,3 +39,4 @@
   
   roles:
     - add_eingram_user
+    - setup_chrony
