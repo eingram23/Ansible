@@ -16,5 +16,6 @@
 
   roles:
     - common
+    - set_perms
 
   

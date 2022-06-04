@@ -1,5 +1,5 @@
 ---
-- name: Enable updates
+- name: Copy repair_settings.php
   hosts: "{{ hostvar|default([]) }}"
   gather_facts: no
   become_user: poduser
@@ -10,7 +10,6 @@
     root: '/home/poduser/code/'
 
   roles:
-    - update
-    - set_perms
+    - repair_settings
 ...
   

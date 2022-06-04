@@ -1,15 +1,16 @@
 ---
-- name: Set code permissions after update
+- name: Enable updates
   hosts: "{{ hostvar|default([]) }}"
   gather_facts: no
-  become_user: poduser
+  become: true
   become_method: sudo
   
   vars:
-    app: 'test.diversionforum.net'
+    app: 'www.diversionforum.net'
     root: '/home/poduser/code/'
 
   roles:
-    - post_update
+    - update
+    - set_perms
 ...
   

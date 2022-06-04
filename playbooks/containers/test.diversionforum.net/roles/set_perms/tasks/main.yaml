@@ -1,17 +1,24 @@
 ---
-- name: Set perms on website after updates
+- name: Set base website permissions
   ansible.builtin.file:
-    path: "{{root}}{{app}}/public_html"
-    state: directory
-    recurse: yes
-    mode: '0755'
+    dest: "{{root}}{{app}}/public_html"
+    mode: u=rwX,g=rX,o=rX
+    recurse: true
+
+- name: Make Settings.php writable
+  ansible.builtin.file:
+    dest: "{{root}}{{app}}/public_html/{{ item }}"
+    mode: u=rwX,g=rwX,o=rwX
+  loop:
+    - Settings.php
+    - Settings_bak.php
 
 - name: Modify html perms to make necessary folders writable
   ansible.builtin.file:
     path: "{{item}}"
     state: directory
     recurse: yes
-    mode: '0777'
+    mode: u=rwX,g=rwX,o=rwX
   loop:
     - "{{root}}{{app}}/public_html/attachments"
     - "{{root}}{{app}}/public_html/avatars"
