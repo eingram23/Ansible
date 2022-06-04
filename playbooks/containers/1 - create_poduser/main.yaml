@@ -1,6 +1,6 @@
 ---
 - name: Create poduser
-  hosts: "{{ hostvar }}"
+  hosts: "{{ hostvar|default([]) }}"
   become: true
   become_method: sudo
 

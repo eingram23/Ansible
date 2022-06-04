@@ -1,6 +1,6 @@
 ---
 - name: Install podman and nginx reverse proxy
-  hosts: "{{ hostvar }}"
+  hosts: "{{ hostvar|default([]) }}"
   gather_facts: no
   become: true
   become_method: sudo
