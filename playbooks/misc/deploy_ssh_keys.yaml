@@ -2,7 +2,7 @@
 
 ---
 - name: Run this to allow passwordless ssh and passwordless sudo 
-  hosts: all
+  hosts: "{{ hostvar|default([]) }}"
   gather_facts: no
   remote_user: eingram
   become: yes
