@@ -2,7 +2,7 @@
 - name: Enable updates
   hosts: "{{ hostvar|default([]) }}"
   gather_facts: no
-  become_user: poduser
+  become: true
   become_method: sudo
   
   vars:
