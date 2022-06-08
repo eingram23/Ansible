@@ -19,6 +19,12 @@ podhost2.local.lan
 [gcp]
 yc-srv1 
 
+[digitalocean]
+yc-appsrv1
+
+[digitalocean:vars]
+ansible_user=ansible
+
 [gcp:vars]
 ansible_host=34.94.14.166 
 ansible_user=sa_117086173709125868794 
