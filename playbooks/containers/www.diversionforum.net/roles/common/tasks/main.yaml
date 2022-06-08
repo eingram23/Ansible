@@ -18,14 +18,14 @@
 
 - name: Pause playbook until web files are uploaded to host
   pause:
-    prompt: "Make sure web file backup is in /home/poduser and renamed to smf_backup.tar.gz"
+    prompt: "Make sure web file backup is in /home/poduser and renamed to sitebackup_www.diversionforum.net.tar.gz"
 
 - name: Extract web files to html root
   ansible.builtin.unarchive:
-    src: /home/poduser/smf_backup.tar.gz
+    src: /home/poduser/sitebackup_www.diversionforum.net.tar.gz
     dest: "{{root}}{{app}}/"
     remote_src: yes
-    extra_opts: [--strip-components=3]
+    extra_opts: [--strip-components=4]
 
 - name: Edit Settings.php to replace localhost with 127.0.0.1 for db connection
   ansible.builtin.lineinfile:
@@ -62,10 +62,10 @@
 
 - name: Pause playbook to make sure smfprod sql dump is on remote host
   pause:
-    prompt: "Make sure smfprod backup is in /home/poduser and renamed to smfprod.bak.gz"
+    prompt: "Make sure smfprod backup is in /home/poduser and renamed to dbbackup_smfprod.bak.gz"
 
 - name: Extract smfprod sql backup
-  ansible.builtin.shell: gunzip -c /home/poduser/smfprod.bak.gz > {{root}}Containers/Projects/{{app}}/{{app}}-db/smfprod.sql
+  ansible.builtin.shell: gunzip -c /home/poduser/dbbackup_smfprod.bak.gz > {{root}}Containers/Projects/{{app}}/{{app}}-db/smfprod.sql
 
 - name: Build www.diversionforum.net-db image
   containers.podman.podman_image:

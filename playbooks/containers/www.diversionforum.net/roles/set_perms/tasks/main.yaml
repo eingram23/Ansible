@@ -19,10 +19,15 @@
     state: directory
     recurse: yes
     mode: u=rwX,g=rwX,o=rwX
+    owner: poduser
+    group: poduser
   loop:
     - "{{root}}{{app}}/public_html/attachments"
+    - "{{root}}{{app}}/public_html/attachmentsPreREI"
     - "{{root}}{{app}}/public_html/avatars"
+    - "{{root}}{{app}}/public_html/custom_avatar"
     - "{{root}}{{app}}/public_html/cache"
     - "{{root}}{{app}}/public_html/Packages"
     - "{{root}}{{app}}/public_html/Smileys"
     - "{{root}}{{app}}/public_html/Themes"
+    - "{{root}}{{app}}/public_html/profile_pictures"

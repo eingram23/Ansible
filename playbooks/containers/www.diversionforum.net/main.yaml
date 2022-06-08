@@ -2,8 +2,6 @@
 - name: Deploy www.diversionforum.net
   hosts: "{{ hostvar|default([]) }}"
   gather_facts: no
-  become_user: poduser
-  become_method: sudo
 
   vars:
     app: "www.diversionforum.net"
@@ -15,7 +13,11 @@
     nginx_port: "8080"
 
   roles:
-    - common
-    - set_perms
+    - role: common
+      become_user: poduser
+      become_method: sudo
+    - role: set_perms
+      become: true
+      become_method: sudo
 
   
