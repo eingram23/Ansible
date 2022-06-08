@@ -2,7 +2,7 @@
 - name: Run terraform apply and create inventory/dns
   hosts: pihole
   gather_facts: false
-  remote_user: eingram
+  remote_user: ansible
   become: true
   become_method: sudo
   vars_files:
@@ -40,3 +40,4 @@
   roles:
     - add_eingram_user
     - setup_chrony
+    - install_packages
