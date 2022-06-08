@@ -34,6 +34,17 @@
         enabled: yes
         state: restarted
 
+    - name: Install firewalld if missing
+      ansible.builtin.package:
+        name: firewalld
+        state: present
+
+    - name: Make sure firewalld is enabled and started
+      ansible.builtin.systemd:
+        state: started
+        enabled: true
+        name: firewalld
+
     - name: Make sure required firewall ports are open
       become: true
       become_method: sudo
