@@ -1,0 +1,43 @@
+---
+- name: Run terraform apply and create inventory/dns
+  hosts: pihole
+  gather_facts: false
+  remote_user: ansible
+  become: true
+  become_method: sudo
+  vars_files:
+    - vars.yaml
+  
+  roles:
+    - pihole_add
+
+- name: Deploy Terraform plan
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - vars.yaml
+
+  tasks:
+
+    - name: Create in memory inventory
+      add_host:
+        name: "{{ item }}.{{ dns_suffix_list[0] }}"
+        groups: temp_group
+      loop: "{{ vm_name_list}}"
+
+  roles:
+    - terraform_apply
+    - add_hosts_inv
+
+- name: Create eingram user
+  hosts: temp_group
+  gather_facts: true
+  remote_user: ansible
+  become: true
+  become_method: sudo
+  
+  roles:
+    - add_eingram_user
+    - setup_chrony
+    - install_packages
