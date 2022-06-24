@@ -61,6 +61,6 @@ ansible_winrm_transport=basic
 ansible_winrm_port=5985
 ansible_become_method=runas
 
-[Test]
 [linux]
-podhost3.local.lan
+grafana.local.lan
+yc-appsrv1-dev.local.lan
