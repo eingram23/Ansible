@@ -27,6 +27,7 @@
     - "{{root}}{{app}}/public_html/avatars"
     - "{{root}}{{app}}/public_html/custom_avatar"
     - "{{root}}{{app}}/public_html/cache"
+    - "{{root}}{{app}}/public_html/exports"
     - "{{root}}{{app}}/public_html/Packages"
     - "{{root}}{{app}}/public_html/Smileys"
     - "{{root}}{{app}}/public_html/Themes"
