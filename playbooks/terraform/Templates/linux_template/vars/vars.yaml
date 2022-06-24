@@ -3,6 +3,9 @@
 tf_root: /Users/edwardingram/code/Terraform/
 temp_path: "{{tf_root}}/Templates/vsphere_linux/"
 proj_root: "{{tf_root}}/Projects/"
+
+### MAKE EDITS BELOW ###
+
 proj_name: podhost3
 
 # Edit this to change distro
