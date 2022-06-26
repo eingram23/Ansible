@@ -1,0 +1,10 @@
+---
+- name: Reload firewalld
+  ansible.builtin.systemd:
+    name: firewalld
+    state: reloaded
+
+- name: Restart snmpd
+  service:
+    name: snmpd
+    state: restarted
