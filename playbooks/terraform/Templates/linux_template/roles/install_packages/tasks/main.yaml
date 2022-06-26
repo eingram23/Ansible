@@ -1,8 +1,0 @@
----
-- name: Install extra packages
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: installed
-  loop:
-    - yum-utils
-    - zip
