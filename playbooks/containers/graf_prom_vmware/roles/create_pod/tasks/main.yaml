@@ -1,0 +1,8 @@
+- name: Create graf_prom_vm pod
+  containers.podman.podman_pod:
+    name: graf_prom_vm
+    state: started
+    publish: 
+      - 9091:9090/tcp
+      - 3000:3000/tcp
+      - 9272:9272/tcp
