@@ -1,5 +1,5 @@
 ---
-- name: Crate iSCSI targets and disks and connect HL-CLUS16 cluster
+- name: Create iSCSI targets and disks and connect HL-CLUS16 cluster
   hosts: hl-fsw.homelab.local
   gather_facts: false
 
