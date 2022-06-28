@@ -28,7 +28,6 @@
     zone: public
     port: 161/udp
     permanent: yes
-    immediate: yes
     state: enabled
   notify:
     - Reload firewalld

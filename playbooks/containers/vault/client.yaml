@@ -1,0 +1,16 @@
+---
+- name: Build and run vault client container
+  hosts: "{{ hostvar|default([]) }}"
+  gather_facts: false
+  become_user: poduser
+  become_method: sudo
+
+  roles:
+    - role: vault-client
+      tags: 
+        - never
+        - build
+    - role: vault-client-update
+      tags:
+        - never
+        - update

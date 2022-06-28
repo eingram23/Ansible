@@ -1,0 +1,15 @@
+- name: Copy Dockerfile to remote host
+  ansible.builtin.copy:
+    src: Dockerfile
+    dest: ~/
+
+- name: Build vault-client image
+  containers.podman.podman_image:
+    name: vault-client
+    path: ~/
+    force: yes
+
+- name: Remove Dockerfile
+  ansible.builtin.file:
+    path: ~/Dockerfile
+    state: absent

@@ -2,7 +2,7 @@
 - name: Create and run grafana container
   containers.podman.podman_container:
     name: grafana
-    image: grafana/grafana:latest
+    image: grafana/grafana:9.0.1
     state: started
     restart_policy: always
     pod: graf_prom_vm

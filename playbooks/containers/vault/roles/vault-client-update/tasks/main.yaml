@@ -1,0 +1,24 @@
+#### ADD SECRETS AS NEEDED THEN DELETE ####
+- name: Update vault kv
+  containers.podman.podman_container:
+    name: vault-client
+    image: localhost/vault-client
+    state: started
+    pod: vault
+    env:
+      VAULT_ADDR: "http://127.0.0.1:8200"
+    command: 
+      vault login token=dev-token
+      vault kv put secret/vsphere/vcsa vsphere_username='administrator@vsphere.local' vsphere_password='B0Cadence&'
+      vault kv put secret/ssh/eingram ssh_username='eingram' ssh_password='NL2B1r13'
+      vault kv put secret/ssh/ansible ssh_username='ansible' ssh_password='NL2B1r13'
+      vault kv put secret/rhel/dev sub_email='edward.ingram23@gmail.com' sub_password='copseh-datgyW-8picpe'
+      vault kv put secret/win/administrator win_password='NL2B1r13'
+      vault kv put secret/win/homelab hladmin_username='homelab\eingram' hladmin_password='NL2B1r13'
+      vault kv put secret/dftest/mysql root='NL2B1r13' smfprod='NL2B1r13'
+      vault kv put secret/homenas/cifs user='shareaccess' passwd='NL2B1r13'
+      vault kv put secret/ycprod/mysql root='fiGqAy0h6vKP' yandcprod='zTdT6Phdjfu'
+      vault kv put secret/dfprod/mysql root='TmgY6IvCfRm6' smfprod='Xd1ySPt8pMCr'
+      vault kv put secret/dftest/mysql root='p1MmgsySmP2N' smfprod='tK4cEYFkN9Op'
+      vault kv put secret/yctest/mysql root='UHQJ5idkqs2d' yandcprod='gyO4fNMhwWUd'
+      vault kv put secret/google/smtp password='gxqchpyemctsalmd'

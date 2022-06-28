@@ -46,7 +46,7 @@
   
   vars:
     - rolepath: "../../homelab/roles/"
-    
+
   roles:
     - role: "{{rolepath}}rhel_sub_add"
       when: ansible_facts['distribution'] == 'RedHat'
@@ -85,7 +85,7 @@
 - name: Add target to prometheus server
   hosts: grafana.local.lan
   gather_facts: false
-  become: yes
+  become_user: poduser
   become_method: sudo
   vars_files:
     - vars.yaml

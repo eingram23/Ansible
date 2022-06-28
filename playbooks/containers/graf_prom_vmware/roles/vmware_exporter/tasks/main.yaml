@@ -1,7 +1,7 @@
 - name: Create and run vmware_exporter container
   containers.podman.podman_container:
     name: vmware_exporter
-    image: pryorda/vmware_exporter:latest
+    image: pryorda/vmware_exporter:v0.18.3
     state: started
     restart_policy: always
     pod: graf_prom_vm

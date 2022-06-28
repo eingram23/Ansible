@@ -17,7 +17,7 @@
 - name: Create and run unifi container
   containers.podman.podman_container:
     name: "{{app}}-controller"
-    image: linuxserver/unifi-controller:latest
+    image: linuxserver/unifi-controller:7.1.66
     state: started
     restart_policy: always
     pod: "{{app}}"

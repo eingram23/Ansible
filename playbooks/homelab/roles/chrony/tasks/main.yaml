@@ -2,7 +2,7 @@
 - name: Make sure chronyd is installed
   ansible.builtin.package:
     name: chrony
-    state: latest
+    state: present
 
 - name: Make sure Chrony is started up
   ansible.builtin.service: 
