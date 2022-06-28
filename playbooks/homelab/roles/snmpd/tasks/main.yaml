@@ -23,6 +23,12 @@
   notify:
     - Restart snmpd
 
+- name: Enable snmpd service
+  ansible.builtin.systemd:
+    name: snmpd
+    state: started
+    enabled: yes
+
 - name: Allow port 161 UDP
   firewalld:
     zone: public
