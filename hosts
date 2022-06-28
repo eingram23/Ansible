@@ -64,3 +64,6 @@ ansible_become_method=runas
 [linux]
 yc-appsrv1-dev.local.lan
 tower.local.lan
+
+[apps]
+grafana.local.lan ansible_host=podhost1.local.lan
