@@ -1,0 +1,13 @@
+---
+- name: Test vault key lookup
+  hosts: localhost
+  gather_facts: false
+
+  vars: 
+    - sub_email: "{{ lookup('hashi_vault','secret=secret/data/rhel/dev:sub_email') }}"
+
+  tasks:
+
+    - name: Key lookup
+      ansible.builtin.debug:
+        var: sub_email
