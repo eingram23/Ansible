@@ -3,11 +3,7 @@
   hosts: localhost
   gather_facts: false
 
-  vars: 
-    - sub_email: "{{ lookup('hashi_vault','secret=secret/data/rhel/dev:sub_email') }}"
-
   tasks:
 
-    - name: Key lookup
-      ansible.builtin.debug:
-        var: sub_email
+    - ansible.builtin.debug:
+        msg: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/rhel/dev:sub_email token=dev-token url=http://vault.local.lan:8200') }}"
